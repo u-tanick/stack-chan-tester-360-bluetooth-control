@@ -16,7 +16,7 @@ Core2 AWS, Core2 v1.1　で動作確認済み。
 
 ### Bluetooth接続 (※)
 
-1. Androidスマホに、別途公開している、[tack-chan-tester-360](https://github.com/u-tanick/stack-chan-bluetooth-control-client-app) アプリをインストール。
+1. Androidスマホに、別途公開している、[Bluetooth接続用クライアントアプリ](https://github.com/u-tanick/stack-chan-bluetooth-control-client-app) をインストール。
   - リポジトリにapkファイルも格納しています。
   - 自作apkとなるため、「提供元不明のアプリ」のインストール許可が必要となります。
   - ESETを入れたスマホでセキュリティチェック済みですが、インストールの際に発生する責任は負いかねます。ご了承ください。
