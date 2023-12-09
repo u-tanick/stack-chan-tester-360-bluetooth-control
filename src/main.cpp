@@ -66,24 +66,27 @@ void moveStop() {
   servo_A.write(STOP_DEGREE);
   servo_B.write(STOP_DEGREE);
   GO_FORWARD = true;
+  avatar.setSpeechText("停止！");
 }
 
 // 前進
 void moveForward(int deg) {
-    moveStop();
-    delay(500);
-    servo_A.write(deg);
-    servo_B.write(deg);
-    GO_FORWARD = false;
+  moveStop();
+  delay(500);
+  servo_A.write(deg);
+  servo_B.write(deg);
+  GO_FORWARD = false;
+  avatar.setSpeechText("前進！");
 }
 
 // 後退
 void moveBack(int deg) {
-    moveStop();
-    delay(500);
-    servo_A.write(deg);
-    servo_B.write(deg);
-    GO_FORWARD = true;
+  moveStop();
+  delay(500);
+  servo_A.write(deg);
+  servo_B.write(deg);
+  GO_FORWARD = true;
+  avatar.setSpeechText("後退！");
 }
 
 // ランダムモード（実装途中）
@@ -142,23 +145,19 @@ class MyCallbacks: public BLECharacteristicCallbacks {
   }
 
   void onWrite(BLECharacteristic *pCharacteristic) {
-    Serial.println("get send data.");
+    Serial.println("Get send data.");
     std::string value = pCharacteristic->getValue();
     Serial.println(value.c_str());
     int num = std::stoi(value.c_str());
-
     if(num==0 || num==30 || num==60) {
       GO_FORWARD = true;
       moveForward(num);
-      avatar.setSpeechText("前進！");
     } else if(num==120 || num==150 || num==180) {
       GO_FORWARD = false;
       moveBack(num);
-      avatar.setSpeechText("後退！");
     } else if(num==STOP_DEGREE) {
       GO_FORWARD = true;
       moveStop();
-      avatar.setSpeechText("停止！");
     }
   }
 };
@@ -208,13 +207,14 @@ void setup() {
     Serial.print("Error attaching servo B");
   }
 
-  avatar.init();
+  avatar.setBatteryIcon(true);
+  avatar.setSpeechFont(&fonts::efontJA_16_b);
+  avatar.init(8);
 
   Serial.println("BLE start.");
   avatar.setSpeechText("BLE start.");
   initBLEServise();
 
-  // avatar.setBatteryIcon(true);
 }
 
 // loop
