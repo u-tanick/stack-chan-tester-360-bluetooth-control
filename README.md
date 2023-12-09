@@ -11,6 +11,12 @@ Bluetooth接続の仕組みは、[BLEでM5Stackと通信](https://coskxlabsite.s
 
 Core2 AWS, Core2 v1.1　で動作確認済み。
 
+- 主要なライブラリ
+  - meganetaaan/M5Stack-Avatar @0.9.1
+  - m5stack/M5Unified @0.1.11
+  - madhephaestus/ESP32Servo @0.13.0
+  - tobozo/M5Stack-SD-Updater#1.2.8
+  - BLEDevice.h, BLEUtil.h, BLEServer.h, BLE2902.h
 
 ## 使い方
 
@@ -36,10 +42,10 @@ Core2 AWS, Core2 v1.1　で動作確認済み。
 * Bボタン
   * サーボの回転を止めます。
 * Cボタン
-  * サーボの正転／負転をランダムに切り替えながら動作します。
+  * 未実装（ご自由に好きな処理を追加してください）
 
 
-M5Stack (Core2を想定）に、[Stack-chan_Takao_Base](https://www.switch-science.com/products/8905?variant=42653590913222)
+M5Stack（Core2を想定）に、[Stack-chan_Takao_Base](https://www.switch-science.com/products/8905?variant=42653590913222)
 や
 [ｽﾀｯｸﾁｬﾝ タカオ版 部品キット](https://mongonta.booth.pm/items/3520339)
 を接続し、360度回転サーボを付けた状態で起動させてください。

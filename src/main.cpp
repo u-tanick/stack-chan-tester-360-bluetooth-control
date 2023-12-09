@@ -57,22 +57,24 @@ Avatar avatar;
 Servo servo_A;
 Servo servo_B;
 
-bool GO_FRONT = true;
+const int STOP_DEGREE = 90;
+
+bool GO_FORWARD = true;
 
 // 停止
 void moveStop() {
-  servo_A.write(90);
-  servo_B.write(90);
-  GO_FRONT = true;
+  servo_A.write(STOP_DEGREE);
+  servo_B.write(STOP_DEGREE);
+  GO_FORWARD = true;
 }
 
 // 前進
-void moveFront(int deg) {
+void moveForward(int deg) {
     moveStop();
     delay(500);
     servo_A.write(deg);
     servo_B.write(deg);
-    GO_FRONT = false;
+    GO_FORWARD = false;
 }
 
 // 後退
@@ -81,10 +83,11 @@ void moveBack(int deg) {
     delay(500);
     servo_A.write(deg);
     servo_B.write(deg);
-    GO_FRONT = true;
+    GO_FORWARD = true;
 }
 
-// ランダムモード
+// ランダムモード（実装途中）
+[[deprecated("sorry, Does not work according to specifications.")]]
 void moveRandom() {
   for (;;) {
     moveStop();
@@ -100,7 +103,7 @@ void moveRandom() {
     delay(1000 + 50 * delay_time);
   }
   M5.Speaker.tone(2500, 500);
-  GO_FRONT = true;
+  GO_FORWARD = true;
 }
 
 // BLE接続用変数
@@ -131,33 +134,32 @@ class MyServerCallbacks: public BLEServerCallbacks {
 
 // BLE接続コールバック関数
 class MyCallbacks: public BLECharacteristicCallbacks {
+
   void onRead(BLECharacteristic *pCharacteristic) {
-    //M5.Lcd.println("read");
-    //Serial.println("read");
-    avatar.setSpeechText("read");
-    pCharacteristic->setValue("Hello World!");
+    Serial.println("M5Stack Connected.");
+    avatar.setSpeechText("こんにちわ！");
+    pCharacteristic->setValue("Hello, I'm M5Stack. Thank you connected. Enjoy!!");
   }
 
   void onWrite(BLECharacteristic *pCharacteristic) {
-    //M5.Lcd.print("write: ");
-    //Serial.println("write");
-    avatar.setSpeechText("write");
+    Serial.println("get send data.");
     std::string value = pCharacteristic->getValue();
-
     Serial.println(value.c_str());
     int num = std::stoi(value.c_str());
 
-    if(num==120 || num==150 || num==180) {
-      GO_FRONT = true;
-      moveFront(num);
-    } else if(num==60 || num==30 || num==0) {
-      GO_FRONT = false;
+    if(num==0 || num==30 || num==60) {
+      GO_FORWARD = true;
+      moveForward(num);
+      avatar.setSpeechText("前進！");
+    } else if(num==120 || num==150 || num==180) {
+      GO_FORWARD = false;
       moveBack(num);
-    } else {
-      GO_FRONT = true;
+      avatar.setSpeechText("後退！");
+    } else if(num==STOP_DEGREE) {
+      GO_FORWARD = true;
       moveStop();
+      avatar.setSpeechText("停止！");
     }
-
   }
 };
 
@@ -208,7 +210,6 @@ void setup() {
 
   avatar.init();
 
-  //M5.Lcd.println("BLE start.");
   Serial.println("BLE start.");
   avatar.setSpeechText("BLE start.");
   initBLEServise();
@@ -223,10 +224,10 @@ void loop() {
 
   // 前進/後退
   if (M5.BtnA.wasPressed()) {
-    Serial.print("Button A : Go Front /Back");
+    Serial.print("Button A : Go Forward / Back");
     M5.Speaker.tone(1000, 100);
-    if(GO_FRONT) {
-      moveFront(60);
+    if(GO_FORWARD) {
+      moveForward(60);
     } else {
       moveBack(120);
     }
@@ -239,20 +240,8 @@ void loop() {
     moveStop();
   }
 
-  // ランダム
+  // 未実装
   if (M5.BtnC.wasPressed()) {
-    Serial.print("Button C : Rumdom Move");
-    M5.Speaker.tone(2000, 100);
-    moveRandom();
   }
 
-  /*
-  // 接続応答
-  if (M5.BtnC.wasPressed()) {
-    if (deviceConnected) {
-      pCharacteristic->setValue("Button C pressed!");
-      pCharacteristic->notify();
-    }
-  }
-  */
 }
